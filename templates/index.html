@@ -3,26 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Tracker</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Gradient Background Example</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Mood Tracker & Affirmation Generator</h1>
-        <form method="POST">
-            <label for="user_input">How are you feeling today?</label>
-            <textarea id="user_input" name="user_input" rows="4" placeholder="Type your thoughts here..."></textarea>
-            <button type="submit">Analyze Mood</button>
-        </form>
-
-        {% if mood %}
-        <div class="result">
-            <h2>Results:</h2>
-            <p><strong>Your Mood:</strong> {{ mood }} (Score: {{ score }})</p>
-            <p><strong>Positive Affirmation:</strong> {{ affirmation }}</p>
-            <p><strong>Your Input:</strong> "{{ user_input }}"</p>
-        </div>
-        {% endif %}
-    </div>
+    <h1 class="title">Zenful AI</h1>
 </body>
 </html>
+
