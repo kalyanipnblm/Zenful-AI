@@ -2,7 +2,7 @@ from transformers import pipeline
 import random
 import pandas as pd
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -50,18 +50,8 @@ def home():
         user_input = request.form.get("user_input")
         mood, score = analyze_mood(user_input)
         affirmation = generate_affirmation(mood)
-        log_mood(user_input, mood, score)
-        return render_template("index.html", mood=mood, score=score, affirmation=affirmation, user_input=user_input)
+        return render_template("index.html", user_input=user_input, mood=mood, affirmation=affirmation)
     return render_template("index.html")
-
-@app.route("/test")
-def test():
-    return "Hello, I am alive!"
-
-@app.route("/test-template")
-def test_template():
-    return render_template("index.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1")

@@ -17,12 +17,28 @@
     <h1 class="newsreader-title">Zenful AI</h1>
     <h2 class="cutive-mono-subtitle">MINDFUL MOMENTS, INSPIRED LIVES</h2>
 
-    <div class="prompt-container">
-        <h3 class="quicksand-prompt">Hi! How are you feeling today?</h3>
-        <div class="container" contenteditable="true" data-placeholder="Write down your thoughts here..."></div>
-    </div>
+    <form method="POST" action="/" class="form-container">
+        <div class="prompt-container">
+            <h3 class="quicksand-prompt">Hi! How are you feeling today?</h3>
+            <textarea name="user_input" placeholder="Write down your thoughts here..." required></textarea>
+        </div>
+        <div class="button-container">
+            <button type="submit" class="button-33" role="button">Analyze Me</button>
+        </div>
+    </form>
 
+    {% if mood %}
+    <div class="results-container">
+        <h3>Results:</h3>
+        <p><strong>Your Mood:</strong> {{ mood }}</p>
+        <p><strong>Positive Affirmation:</strong> {{ affirmation }}</p>
+    </div>
+    {% endif %}
 </body>
 </html>
+
+
+
+
 
 
