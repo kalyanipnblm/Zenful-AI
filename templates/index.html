@@ -27,11 +27,10 @@
         </div>
     </form>
 
-    {% if mood %}
+    {% if mood_response %}
     <div class="results-container">
         <h3>Results:</h3>
-        <p><strong>Your Mood:</strong> {{ mood }}</p>
-        <p><strong>Positive Affirmation:</strong> {{ affirmation }}</p>
+        <p>{{ mood_response }}</p>
     </div>
     {% endif %}
 </body>

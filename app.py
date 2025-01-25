@@ -1,57 +1,33 @@
-from transformers import pipeline
-import random
-import pandas as pd
-from datetime import datetime
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
+import openai
 
 app = Flask(__name__)
 
-feelings_analyzer = pipeline("sentiment-analysis")
+openai.api_key = "sk-your-api-key-here"
 
-def analyze_mood(user_input):
-    result = feelings_analyzer(user_input)[0]
-    mood = result['label']
-    score = round(result['score'], 2)
-    return mood, score
-
-def generate_affirmation(mood):
-    affirmations = {
-        "POSITIVE": [
-            "Your positive energy is inspiring—keep it going!",
-            "Keep up the great work! You’re shining today!"
-        ],
-        "NEGATIVE": [
-            "This moment will pass. You’re stronger than you think.",
-            "Take it one step at a time; brighter days are ahead."
-        ],
-        "NEUTRAL": [
-            "Today is a great day to focus on your goals. You've got this!",
-            "Stay steady and remember—you’re doing better than you think!"
-        ]
-    }
-    return random.choice(affirmations.get(mood, ["You're doing amazing"]))
-
-def log_mood(user_input, mood, score):
-    log_file = "mood_log.csv"
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    new_entry = {"Date": current_date, "Input": user_input, "Mood": mood, "Score": score}
-
+def generate_response(user_input):
     try:
-        df = pd.read_csv(log_file)
-        df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
-    except FileNotFoundError:
-        df = pd.DataFrame([new_entry])
-
-    df.to_csv(log_file, index=False)
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that analyzes mood and provides positive affirmations."},
+                {"role": "user", "content": f"Analyze the mood of this input and provide a positive affirmation:\n\n{user_input}"}
+            ],
+            max_tokens=150,
+            temperature=0.7,
+        )
+        return response["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"Error: {e}"
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    mood_response = None
     if request.method == "POST":
         user_input = request.form.get("user_input")
-        mood, score = analyze_mood(user_input)
-        affirmation = generate_affirmation(mood)
-        return render_template("index.html", user_input=user_input, mood=mood, affirmation=affirmation)
-    return render_template("index.html")
+        if user_input:
+            mood_response = generate_response(user_input)
+    return render_template("index.html", mood_response=mood_response)
 
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1")
